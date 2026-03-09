@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>Perhitungan Fumigasi & Spraying</title>
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <header>
+            <h1>Kalkulator Fumigasi & Spraying</h1>
+            <p class="subtitle">Pilih jenis perhitungan yang diinginkan</p>
+        </header>
+
+        <main>
+
+            <!-- TAB SWITCH -->
+            <div class="tab-group">
+                <button class="tab active" onclick="switchTab('fumigasi')">Fumigasi</button>
+                <button class="tab" onclick="switchTab('spraying')">Spraying</button>
+            </div>
+
+            <!-- ======================== -->
+            <!--     FUMIGASI SECTION     -->
+            <!-- ======================== -->
+            <div id="tab-fumigasi">
+
+                <section class="card">
+                    <div class="card-label">01 — Informasi Komoditas</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="f-commodity">Jenis Komoditi</label>
+                            <select id="f-commodity" onchange="onKomoditasChange()">
+                                <option value="beras">Beras</option>
+                                <option value="gabah">Gabah</option>
+                                <option value="jagung">Jagung</option>
+                                <option value="kedelai">Kedelai</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-qty">Kuantum (ton)</label>
+                            <input type="number" id="f-qty" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">02 — Broken Space</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="f-broken-m3">Broken Space (m³)</label>
+                            <input type="number" id="f-broken-m3" min="0" step="0.01" placeholder="0.00" oninput="onBrokenM3Change()">
+                        </div>
+                        <div class="field">
+                            <label for="f-stowage">Stowage Factor (m³/ton)</label>
+                            <input type="number" id="f-stowage" min="0" step="0.01" placeholder="0.00" oninput="onBrokenM3Change()">
+                        </div>
+                        <div class="field">
+                            <label for="f-broken-ton">Broken Space (ton)</label>
+                            <input type="number" id="f-broken-ton" placeholder="otomatis" readonly>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">03 — Dosis Fumigan</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="f-fumigan">Jenis Fumigan</label>
+                            <select id="f-fumigan" onchange="onFumiganChange()">
+                                <option value="phostek">Phostek </option>
+                                <option value="delicia">Delicia </option>
+                                <option value="custom">Custom Dosis</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-dosis">Dosis (tablet/ton)</label>
+                            <input type="number" id="f-dosis" min="0" step="0.1" value="3" placeholder="0.0">
+                        </div>
+                    </div>
+                </section>
+
+                <button class="btn-hitung" onclick="hitungFumigasi()">Hitung Fumigasi</button>
+
+                <section class="result-card" id="hasil-fumigasi">
+                    <div class="card-label">Hasil Perhitungan Fumigasi</div>
+                    <div class="result-info" id="f-resultInfo"></div>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="result-label">Kuantum Tumpukan</div>
+                            <div class="result-value" id="f-resTumpukan">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Broken Space</div>
+                            <div class="result-value" id="f-resBroken">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Total (ton)</div>
+                            <div class="result-value" id="f-resVolTotal">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Dosis Fumigan</div>
+                            <div class="result-value" id="f-resDosis">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Total Fumigan (tablet)</div>
+                            <div class="result-value" id="f-resFumigan">—</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Total Fumigan Dibutuhkan</div>
+                            <div class="result-value" id="f-resFumiganKg">— tablet</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ======================== -->
+            <!--     SPRAYING SECTION     -->
+            <!-- ======================== -->
+            <div id="tab-spraying" style="display:none;">
+
+                <section class="card">
+                    <div class="card-label">01 — Informasi Dasar</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="s-commodity">Jenis Komoditi</label>
+                            <select id="s-commodity">
+                                <option value="beras">Beras</option>
+                                <option value="gabah">Gabah</option>
+                                <option value="jagung">Jagung</option>
+                                <option value="kedelai">Kedelai</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="s-insektisida">Jenis Insektisida</label>
+                            <select id="s-insektisida">
+                                <option value="alfastore">Alfastore</option>
+                                <option value="bestrin">Bestrin Forte</option>
+                                <option value="stolium">Stolium</option>
+                                <option value="tribola">Tribola</option>
+                                <option value="silogud">Silogud</option>
+                                <option value="silamda">Silamda</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">02 — Dimensi Gudang</div>
+                    <div class="form-grid three-col">
+                        <div class="field">
+                            <label for="s-panjang">Panjang Gudang (m)</label>
+                            <input type="number" id="s-panjang" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="field">
+                            <label for="s-lebar">Lebar Gudang (m)</label>
+                            <input type="number" id="s-lebar" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="field">
+                            <label for="s-tinggi">Tinggi Gudang (m)</label>
+                            <input type="number" id="s-tinggi" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-grid" style="margin-top: 16px;">
+                        <div class="field">
+                            <label for="s-teras">Lebar Teras (m)</label>
+                            <input type="number" id="s-teras" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">03 — Kuantum Stapel & Lantai</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="s-stapel">Kuantum Stapel (ton)</label>
+                            <input type="number" id="s-stapel" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="field">
+                            <label for="s-lantai">Kuantum Lantai Tidak Dispraying (ton)</label>
+                            <input type="number" id="s-lantai" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">04 — Dosis Spraying</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="s-dosis">Dosis (ml/m²)</label>
+                            <input type="number" id="s-dosis" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Rincian Area Live -->
+                <section class="card" id="s-rincian-card">
+                    <div class="card-label">Rincian Area Sasaran</div>
+                    <table class="rincian-table">
+                        <thead>
+                            <tr>
+                                <th>Komponen</th>
+                                <th>Rumus</th>
+                                <th>Luas (m²)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dinding memanjang luar/dalam</td>
+                                <td id="r-dinding-panjang-rumus">—</td>
+                                <td id="r-dinding-panjang">—</td>
+                            </tr>
+                            <tr>
+                                <td>Dinding melebar luar/dalam</td>
+                                <td id="r-dinding-lebar-rumus">—</td>
+                                <td id="r-dinding-lebar">—</td>
+                            </tr>
+                            <tr>
+                                <td>Atap dan lantai gudang</td>
+                                <td id="r-atap-rumus">—</td>
+                                <td id="r-atap">—</td>
+                            </tr>
+                            <tr>
+                                <td>Teras gudang</td>
+                                <td id="r-teras-rumus">—</td>
+                                <td id="r-teras">—</td>
+                            </tr>
+                            <tr>
+                                <td>Permukaan stapel</td>
+                                <td id="r-stapel-rumus">—</td>
+                                <td id="r-stapel">—</td>
+                            </tr>
+                            <tr class="row-subtotal">
+                                <td colspan="2">Subtotal</td>
+                                <td id="r-subtotal">—</td>
+                            </tr>
+                            <tr class="row-kurang">
+                                <td>Lantai tidak dispraying</td>
+                                <td id="r-lantai-rumus">—</td>
+                                <td id="r-lantai">—</td>
+                            </tr>
+                            <tr class="row-total">
+                                <td colspan="2">Total Sasaran</td>
+                                <td id="r-total">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <button class="btn-hitung" onclick="hitungSpraying()">Hitung Spraying</button>
+
+                <section class="result-card" id="hasil-spraying">
+                    <div class="card-label">Hasil Perhitungan Spraying</div>
+                    <div class="result-info" id="s-resultInfo"></div>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="result-label">Dinding Memanjang</div>
+                            <div class="result-value" id="s-resDindingP">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Dinding Melebar</div>
+                            <div class="result-value" id="s-resDindingL">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Atap & Lantai</div>
+                            <div class="result-value" id="s-resAtap">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Teras</div>
+                            <div class="result-value" id="s-resTeras">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Permukaan Stapel</div>
+                            <div class="result-value" id="s-resStapel">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Lantai Tidak Dispraying</div>
+                            <div class="result-value" id="s-resLantai">—</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Total Sasaran</div>
+                            <div class="result-value" id="s-resTotal">— m²</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Total Pestisida Dibutuhkan</div>
+                            <div class="result-value" id="s-resPestisida">— ml</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+
+        <footer>
+            <p>Fumigasi & Spraying Calculator &copy; 2026</p>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

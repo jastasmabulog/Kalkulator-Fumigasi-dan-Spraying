@@ -12,7 +12,7 @@
     <title>Perhitungan Fumigasi, Spraying dan Fogging</title>
 </head>
 <body>
-    <div class="page-wrapper">
+    <div class="page-wrapper">b
 
         <header>
             <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:8px;">
@@ -151,17 +151,10 @@
                             </select>
                         </div>
                         <div class="field">
-                            <label for="s-insektisida">Jenis Insektisida</label>
-                            <select id="s-insektisida">
-                                <option value="alfastore">Alfastore 30 EC</option>
-                                <option value="bestrin">Bestrin Forte 100 EC</option>
-                                <option value="stolium">Stolium 30 EC</option>
-                                <option value="tribola">Tribola 500 EC</option>
-                                <option value="silogud">Silogud 250 EC</option>
-                                <option value="silamda">Silamda 25 EC</option>
-                                <option value="custom">Lainnya (manual)</option>
-                            </select>
+                            <label for="s-stapel">Kuantum Stapel (ton)</label>
+                            <input type="number" id="s-stapel" min="0" step="0.01" placeholder="0.00">
                         </div>
+                        
                     </div>
                 </section>
 
@@ -197,19 +190,22 @@
                     </div>
                 </section>
 
-                <section class="card">
-                    <div class="card-label">03 — Kuantum Stapel</div>
-                    <div class="form-grid">
-                        <div class="field">
-                            <label for="s-stapel">Kuantum Stapel (ton)</label>
-                            <input type="number" id="s-stapel" min="0" step="0.01" placeholder="0.00">
-                        </div>
-                    </div>
-                </section>
 
                 <section class="card">
-                    <div class="card-label">04 — Dosis Spraying</div>
+                    <div class="card-label">03 — Dosis Spraying</div>
                     <div class="form-grid">
+                        <div class="field">
+                            <label for="s-insektisida">Jenis Insektisida</label>
+                            <select id="s-insektisida">
+                                <option value="alfastore">Alfastore 30 EC</option>
+                                <option value="bestrin">Bestrin Forte 100 EC</option>
+                                <option value="stolium">Stolium 30 EC</option>
+                                <option value="tribola">Tribola 500 EC</option>
+                                <option value="silogud">Silogud 250 EC</option>
+                                <option value="silamda">Silamda 25 EC</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
                         <div class="field">
                             <label for="s-dosis">Dosis (ml/m²)</label>
                             <input type="number" id="s-dosis" min="0" step="0.01" value="0.25" readonly>
@@ -218,7 +214,7 @@
                 </section>
 
                 <section class="card">
-                    <div class="card-label">05 — Opsional</div>
+                    <div class="card-label">04 — Opsional</div>
                     <div class="field">
                         <input type="checkbox" id="s-lingkungan" style="display:none;">
                         <div id="s-lingkungan-label"
@@ -375,18 +371,7 @@
                                 <option value="custom">Lainnya (manual)</option>
                             </select>
                         </div>
-                        <div class="field">
-                            <label for="fg-insektisida">Jenis Insektisida</label>
-                            <select id="fg-insektisida">
-                                <option value="alfastore">Alfastore 30 EC</option>
-                                <option value="bestrin">Bestrin Forte 100 EC</option>
-                                <option value="stolium">Stolium 30 EC</option>
-                                <option value="tribola">Tribola 500 EC</option>
-                                <option value="silogud">Silogud 250 EC</option>
-                                <option value="silamda">Silamda 25 EC</option>
-                                <option value="custom">Lainnya (manual)</option>
-                            </select>
-                        </div>
+                        
                     </div>
                 </section>
 
@@ -425,6 +410,18 @@
                 <section class="card">
                     <div class="card-label">03 — Dosis Fogging</div>
                     <div class="form-grid">
+                        <div class="field">
+                            <label for="fg-insektisida">Jenis Insektisida</label>
+                            <select id="fg-insektisida">
+                                <option value="alfastore">Alfastore 30 EC</option>
+                                <option value="bestrin">Bestrin Forte 100 EC</option>
+                                <option value="stolium">Stolium 30 EC</option>
+                                <option value="tribola">Tribola 500 EC</option>
+                                <option value="silogud">Silogud 250 EC</option>
+                                <option value="silamda">Silamda 25 EC</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
                         <div class="field">
                             <label for="fg-dosis">Dosis (ml/m²)</label>
                             <input type="number" id="fg-dosis" value="0.025" readonly>

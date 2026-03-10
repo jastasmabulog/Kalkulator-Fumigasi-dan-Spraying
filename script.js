@@ -69,7 +69,7 @@ function onBrokenM3Change() {
     const brokenM3  = parseFloat(document.getElementById('f-broken-m3').value) || 0;
     const stowage   = parseFloat(document.getElementById('f-stowage').value) || 0;
     const brokenTon = stowage > 0 ? brokenM3 * stowage : 0;
-    document.getElementById('f-broken-ton').value = fmt(brokenTon);
+    document.getElementById('f-broken-ton').value = brokenTon.toFixed(2);
 }
 
 function onFumiganChange() {

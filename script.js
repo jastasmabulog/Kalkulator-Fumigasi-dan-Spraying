@@ -37,9 +37,10 @@ const fmtFog = (val) =>
 // ==============================
 
 function switchTab(tab) {
-    document.getElementById('tab-fumigasi').style.display = tab === 'fumigasi' ? 'block' : 'none';
-    document.getElementById('tab-spraying').style.display = tab === 'spraying' ? 'block' : 'none';
-    document.getElementById('tab-fogging').style.display  = tab === 'fogging'  ? 'block' : 'none';
+    document.getElementById('tab-fumigasi').style.display    = tab === 'fumigasi'    ? 'block' : 'none';
+    document.getElementById('tab-spraying').style.display    = tab === 'spraying'    ? 'block' : 'none';
+    document.getElementById('tab-fogging').style.display     = tab === 'fogging'     ? 'block' : 'none';
+    document.getElementById('tab-fumigasi-sf').style.display = tab === 'fumigasi-sf' ? 'block' : 'none';
     document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
 }
@@ -200,14 +201,14 @@ function hitungSpraying() {
          <span class="info-tag">${dosis} ml/m²</span>
          ${lingkungan ? '<span class="info-sep">·</span><span class="info-tag" style="background:#e6f9f3;color:#00a878;border-color:#b2f0e0;">+10% Lingkungan</span>' : ''}`;
 
-    document.getElementById('s-resDindingP').textContent   = fmt(r.dindingPanjang) + ' m²';
-    document.getElementById('s-resDindingL').textContent   = fmt(r.dindingLebar) + ' m²';
-    document.getElementById('s-resAtap').textContent       = fmt(r.atap) + ' m²';
-    document.getElementById('s-resTeras').textContent      = fmt(r.terasArea) + ' m²';
-    document.getElementById('s-resStapel').textContent     = fmt(r.stapelArea) + ' m²';
-    document.getElementById('s-resLantai').textContent     = '− ' + fmt(r.lantaiTidak) + ' m²';
-    document.getElementById('s-resTotal').textContent      = fmt(luasFinal) + ' m²';
-    document.getElementById('s-resPestisida').textContent  = fmtMl(totalMl);
+    document.getElementById('s-resDindingP').textContent    = fmt(r.dindingPanjang) + ' m²';
+    document.getElementById('s-resDindingL').textContent    = fmt(r.dindingLebar) + ' m²';
+    document.getElementById('s-resAtap').textContent        = fmt(r.atap) + ' m²';
+    document.getElementById('s-resTeras').textContent       = fmt(r.terasArea) + ' m²';
+    document.getElementById('s-resStapel').textContent      = fmt(r.stapelArea) + ' m²';
+    document.getElementById('s-resLantai').textContent      = '− ' + fmt(r.lantaiTidak) + ' m²';
+    document.getElementById('s-resTotal').textContent       = fmt(luasFinal) + ' m²';
+    document.getElementById('s-resPestisida').textContent   = fmtMl(totalMl);
     document.getElementById('s-resInsektisida').textContent = fmtMl(0.25 * luasFinal);
     document.getElementById('s-resAir').textContent         = fmtMl(29.75 * luasFinal);
     document.getElementById('s-resLarutan').textContent     = fmtMl(30 * luasFinal);
@@ -262,6 +263,72 @@ function hitungFogging() {
 }
 
 // ==============================
+// FUMIGASI SF - KALKULASI
+// ==============================
+
+function onKomoditasSFChange() {
+    const komoditas = document.getElementById('sf-commodity').value;
+    const input     = document.getElementById('sf-stowage');
+    const factor    = stowageFactor[komoditas];
+
+    if (factor !== null) {
+        input.value    = factor;
+        input.readOnly = true;
+    } else {
+        input.value    = '';
+        input.readOnly = false;
+        input.focus();
+    }
+}
+
+function onObatSFChange() {
+    const obat  = document.getElementById('sf-obat').value;
+    const input = document.getElementById('sf-dosis');
+    if (obat === 'indofum') {
+        input.value    = 18;
+        input.readOnly = true;
+    } else {
+        input.value    = '';
+        input.readOnly = false;
+        input.focus();
+    }
+}
+
+function hitungFumigaziSF() {
+    const qty      = parseFloat(document.getElementById('sf-qty').value) || 0;
+    const stowage  = parseFloat(document.getElementById('sf-stowage').value) || 0;
+    const brokenM3 = parseFloat(document.getElementById('sf-broken-m3').value) || 0;
+    const dosis    = parseFloat(document.getElementById('sf-dosis').value) || 0;
+    const komoEl   = document.getElementById('sf-commodity');
+    const komoditi = komoEl.options[komoEl.selectedIndex].text;
+    const obatEl   = document.getElementById('sf-obat');
+    const obat     = obatEl.options[obatEl.selectedIndex].text;
+
+    const tumpukanM3  = stowage > 0 ? qty / stowage : 0;
+    const totalM3     = tumpukanM3 + brokenM3;
+    const totalObatG  = totalM3 * dosis;
+    const totalObatKg = totalObatG / 1000;
+
+    document.getElementById('sf-resultInfo').innerHTML =
+        `<span class="info-tag">${komoditi}</span>
+         <span class="info-sep">·</span>
+         <span class="info-tag">${fmt(qty)} ton</span>
+         <span class="info-sep">·</span>
+         <span class="info-tag">${obat}</span>`;
+
+    document.getElementById('sf-resTumpukanM3').textContent =
+        fmt(qty) + ' ÷ ' + fmt(stowage) + ' = ' + fmt(tumpukanM3) + ' m³';
+    document.getElementById('sf-resBroken').textContent  = fmt(brokenM3) + ' m³';
+    document.getElementById('sf-resTotalM3').textContent =
+        fmt(tumpukanM3) + ' + ' + fmt(brokenM3) + ' = ' + fmt(totalM3) + ' m³';
+    document.getElementById('sf-resDosis').textContent   = dosis + ' g/m³';
+    document.getElementById('sf-resTotal').textContent   =
+        fmt(totalObatG) + ' g (' + fmt(totalObatKg) + ' kg)';
+
+    tampilkanHasil('hasil-fumigasi-sf');
+}
+
+// ==============================
 // HELPER
 // ==============================
 
@@ -305,7 +372,20 @@ function resetForm(tab) {
          'fg-r-lantai-rumus','fg-r-teras-rumus'].forEach(id => document.getElementById(id).textContent = '—');
         document.getElementById('hasil-fogging').classList.remove('visible');
     }
+    if (tab === 'fumigasi-sf') {
+        document.getElementById('sf-qty').value       = '';
+        document.getElementById('sf-broken-m3').value = '';
+        document.getElementById('sf-commodity').value = 'beras';
+        document.getElementById('sf-obat').value      = 'indofum';
+        onKomoditasSFChange();
+        onObatSFChange();
+        document.getElementById('hasil-fumigasi-sf').classList.remove('visible');
+    }
 }
+
+// ==============================
+// INISIALISASI
+// ==============================
 
 document.getElementById('s-lingkungan-label').addEventListener('click', function() {
     const cb    = document.getElementById('s-lingkungan');
@@ -330,9 +410,7 @@ document.getElementById('s-lingkungan-label').addEventListener('click', function
     }
 });
 
-// ==============================
-// INISIALISASI
-// ==============================
-
 onKomoditasChange();
 onFumiganChange();
+onObatSFChange();
+onKomoditasSFChange();

@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="stylesheet" href="style.css"/>
-    
-    <!-- Logo di tab browser -->
-   <link rel="icon" type="image/png" href="logo.png">
-    
+    <link rel="icon" type="image/png" href="logo.png">
     <title>Perhitungan Fumigasi, Spraying dan Fogging</title>
 </head>
 <body>
@@ -18,7 +14,7 @@
             <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:8px;">
                 <img src="logo.png" alt="Logo" style="width:90px; height:auto; margin:0;">
                 <div style="width:1px; height:40px; background:#e2e8f0;"></div>
-                <img src="jastasma.png" alt="Logo Bulog" style="width:90px; height:auto; margin:0;">
+                <img src="jastasma.png" alt="Logo Jastasma" style="width:90px; height:auto; margin:0;">
             </div>
             <h1>Kalkulator Fumigasi, Spraying dan Fogging</h1>
             <p class="subtitle">Pilih jenis perhitungan yang diinginkan</p>
@@ -28,6 +24,7 @@
 
             <div class="tab-group">
                 <button class="tab active" onclick="switchTab('fumigasi')">Fumigasi</button>
+                <button class="tab" onclick="switchTab('fumigasi-sf')">Fumigasi SF</button>
                 <button class="tab" onclick="switchTab('spraying')">Spraying</button>
                 <button class="tab" onclick="switchTab('fogging')">Fogging</button>
             </div>
@@ -35,7 +32,7 @@
             <!-- ======================== -->
             <!--     FUMIGASI SECTION     -->
             <!-- ======================== -->
-            <div id="tab-fumigasi">
+            <div id="tab-fumigasi" style="display:block;">
 
                 <section class="card">
                     <div class="card-label">01 — Informasi Komoditas</div>
@@ -82,16 +79,16 @@
                             <label for="f-fumigan">Jenis Fumigan</label>
                             <select id="f-fumigan" onchange="onFumiganChange()">
                                 <option value="phostek">Phostek 56 TB</option>
-                                <option value="deliciagastoxin">Delicia Gastoxin 56 TB </option>
-                                <option value="quickphos">Quickphos 56 TB </option>
-                                 <option value="shenphos">Shenphos 57 TB </option>
-                                  <option value="fumiphos">Fumiphos 56 TB </option>
+                                <option value="deliciagastoxin">Delicia Gastoxin 56 TB</option>
+                                <option value="quickphos">Quickphos 56 TB</option>
+                                <option value="shenphos">Shenphos 57 TB</option>
+                                <option value="fumiphos">Fumiphos 56 TB</option>
                                 <option value="custom">Custom Dosis</option>
                             </select>
                         </div>
                         <div class="field">
                             <label for="f-dosis">Dosis (tablet/ton)</label>
-                            <input type="number" id="f-dosis" min="0" step="0.1" value="3" placeholder="0.0">
+                            <input type="number" id="f-dosis" min="0" step="0.1" value="2" placeholder="0.0">
                         </div>
                     </div>
                 </section>
@@ -133,6 +130,97 @@
             </div>
 
             <!-- ======================== -->
+            <!--   FUMIGASI SF SECTION    -->
+            <!-- ======================== -->
+            <div id="tab-fumigasi-sf" style="display:none;">
+
+                <section class="card">
+                    <div class="card-label">01 — Informasi Komoditas</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="sf-commodity">Jenis Komoditi</label>
+                            <select id="sf-commodity" onchange="onKomoditasSFChange()">
+                                <option value="beras">Beras</option>
+                                <option value="gabah">Gabah</option>
+                                <option value="jagung">Jagung</option>
+                                <option value="kedelai">Kedelai</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="sf-qty">Kuantum Tonase (ton)</label>
+                            <input type="number" id="sf-qty" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">02 — Volume Broken Space</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="sf-broken-m3">Volume Broken Space (m³)</label>
+                            <input type="number" id="sf-broken-m3" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="field">
+                            <label for="sf-stowage">Stowage Factor (m³/ton)</label>
+                            <input type="number" id="sf-stowage" min="0" step="0.01" placeholder="0.00" readonly>
+                        </div>
+                    </div>
+                    <p style="font-size:12px; color:#64748b; margin-top:10px; padding:10px 12px; background:#f0f4f8; border-radius:8px; border-left:3px solid #1a6ef5;">
+                        Volume total broken space tertutup di dalam sungkup
+                    </p>
+                </section>
+
+                <section class="card">
+                    <div class="card-label">03 — Dosis Obat</div>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="sf-obat">Jenis Obat</label>
+                            <select id="sf-obat" onchange="onObatSFChange()">
+                                <option value="indofum">Indofum</option>
+                                <option value="custom">Lainnya (manual)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="sf-dosis">Dosis (g/m³)</label>
+                            <input type="number" id="sf-dosis" value="18" readonly>
+                        </div>
+                    </div>
+                </section>
+
+                <button class="btn-hitung" onclick="hitungFumigaziSF()">Hitung Fumigasi SF</button>
+                <button class="btn-reset" onclick="resetForm('fumigasi-sf')">↺ Reset</button>
+
+                <section class="result-card" id="hasil-fumigasi-sf">
+                    <div class="card-label">Hasil Perhitungan Fumigasi SF</div>
+                    <div class="result-info" id="sf-resultInfo"></div>
+                    <div class="result-grid">
+                        <div class="result-item highlight">
+                            <div class="result-label">Tumpukan (ton) ÷ Stowage Factor</div>
+                            <div class="result-value" id="sf-resTumpukanM3">—</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Volume Broken Space</div>
+                            <div class="result-value" id="sf-resBroken">—</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Total Volume</div>
+                            <div class="result-value" id="sf-resTotalM3">—</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Dosis Obat</div>
+                            <div class="result-value" id="sf-resDosis">—</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Total Obat Dibutuhkan (Total Volume × Dosis)</div>
+                            <div class="result-value" id="sf-resTotal">— g</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ======================== -->
             <!--     SPRAYING SECTION     -->
             <!-- ======================== -->
             <div id="tab-spraying" style="display:none;">
@@ -154,7 +242,6 @@
                             <label for="s-stapel">Kuantum Stapel (ton)</label>
                             <input type="number" id="s-stapel" min="0" step="0.01" placeholder="0.00">
                         </div>
-                        
                     </div>
                 </section>
 
@@ -174,7 +261,7 @@
                             <input type="number" id="s-tinggi" min="0" step="0.01" placeholder="0.00">
                         </div>
                     </div>
-                    <div class="form-grid" style="margin-top: 14px;">
+                    <div class="form-grid" style="margin-top:14px;">
                         <div class="field">
                             <label for="s-teras">Lebar Teras (m)</label>
                             <input type="number" id="s-teras" min="0" step="0.01" placeholder="0.00">
@@ -189,7 +276,6 @@
                         </div>
                     </div>
                 </section>
-
 
                 <section class="card">
                     <div class="card-label">03 — Dosis Spraying</div>
@@ -230,8 +316,7 @@
                     </div>
                 </section>
 
-                <!-- Rincian Area Live -->
-                <section class="card" id="s-rincian-card">
+                <section class="card">
                     <div class="card-label">Rincian Area Sasaran</div>
                     <table class="rincian-table">
                         <thead>
@@ -371,7 +456,6 @@
                                 <option value="custom">Lainnya (manual)</option>
                             </select>
                         </div>
-                        
                     </div>
                 </section>
 
@@ -391,7 +475,7 @@
                             <input type="number" id="fg-tinggi" min="0" step="0.01" placeholder="0.00">
                         </div>
                     </div>
-                    <div class="form-grid" style="margin-top: 14px;">
+                    <div class="form-grid" style="margin-top:14px;">
                         <div class="field">
                             <label for="fg-teras">Lebar Teras (m)</label>
                             <input type="number" id="fg-teras" min="0" step="0.01" placeholder="0.00">
@@ -429,7 +513,6 @@
                     </div>
                 </section>
 
-                <!-- Rincian Area -->
                 <section class="card">
                     <div class="card-label">Rincian Area Sasaran</div>
                     <table class="rincian-table">
@@ -491,7 +574,7 @@
                                 <div class="result-value larutan-value" id="fg-resInsektisida">— ml</div>
                             </div>
                             <div>
-                                <div class="result-label"> Pelarut</div>
+                                <div class="result-label">Air Pelarut</div>
                                 <div class="result-value larutan-value" id="fg-resAir">— ml</div>
                             </div>
                             <div>

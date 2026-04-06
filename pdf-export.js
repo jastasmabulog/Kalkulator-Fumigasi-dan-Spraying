@@ -55,6 +55,11 @@ function downloadPDF(tab) {
         y += 8;
     };
 
+    const getSelected = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.options[el.selectedIndex].text : '—';
+    };
+
     if (tab === 'fumigasi') {
         const hasil = document.getElementById('hasil-fumigasi');
         if (!hasil.classList.contains('visible')) {
@@ -63,13 +68,15 @@ function downloadPDF(tab) {
         }
         addHeader('Hasil Perhitungan Fumigasi');
         addSection('Informasi');
-        addRow('Kuantum Tumpukan',        document.getElementById('f-resTumpukan').textContent);
-        addRow('Broken Space',            document.getElementById('f-resBroken').textContent);
-        addRow('Total Ton',               document.getElementById('f-resVolTotal').textContent);
-        addRow('Dosis Fumigan',           document.getElementById('f-resDosis').textContent);
+        addRow('Komoditi',               getSelected('f-commodity'));
+        addRow('Jenis Fumigan',          getSelected('f-fumigan'));
+        addRow('Kuantum Tumpukan',       document.getElementById('f-resTumpukan').textContent);
+        addRow('Broken Space',           document.getElementById('f-resBroken').textContent);
+        addRow('Total Ton',              document.getElementById('f-resVolTotal').textContent);
+        addRow('Dosis Fumigan',          document.getElementById('f-resDosis').textContent);
         addSection('Hasil');
-        addRow('Total Fumigan (tablet)',  document.getElementById('f-resFumigan').textContent);
-        addRow('Total Fumigan Dibutuhkan',document.getElementById('f-resFumiganKg').textContent, true);
+        addRow('Total Fumigan (tablet)', document.getElementById('f-resFumigan').textContent);
+        addRow('Total Fumigan Dibutuhkan', document.getElementById('f-resFumiganKg').textContent, true);
         doc.save('hasil-fumigasi.pdf');
 
     } else if (tab === 'fumigasi-sf') {
@@ -80,9 +87,11 @@ function downloadPDF(tab) {
         }
         addHeader('Hasil Perhitungan Fumigasi SF');
         addSection('Informasi');
-        addRow('Kuantum Tonase',     document.getElementById('sf-resTumpukanM3').textContent);
+        addRow('Komoditi',             getSelected('sf-commodity'));
+        addRow('Jenis Obat',           getSelected('sf-obat'));
+        addRow('Kuantum Tonase',       document.getElementById('sf-resTumpukanM3').textContent);
         addRow('Volume Total Sungkup', document.getElementById('sf-resBroken').textContent);
-        addRow('Dosis Obat',         document.getElementById('sf-resDosis').textContent);
+        addRow('Dosis Obat',           document.getElementById('sf-resDosis').textContent);
         addSection('Hasil');
         addRow('Total Obat Dibutuhkan', document.getElementById('sf-resTotal').textContent, true);
         doc.save('hasil-fumigasi-sf.pdf');
@@ -94,20 +103,23 @@ function downloadPDF(tab) {
             return;
         }
         addHeader('Hasil Perhitungan Spraying');
+        addSection('Informasi');
+        addRow('Komoditi',               getSelected('s-commodity'));
+        addRow('Jenis Insektisida',      getSelected('s-insektisida'));
         addSection('Rincian Area');
-        addRow('Dinding Memanjang',        document.getElementById('s-resDindingP').textContent);
-        addRow('Dinding Melebar',          document.getElementById('s-resDindingL').textContent);
-        addRow('Atap & Lantai',            document.getElementById('s-resAtap').textContent);
-        addRow('Teras',                    document.getElementById('s-resTeras').textContent);
-        addRow('Permukaan Stapel',         document.getElementById('s-resStapel').textContent);
-        addRow('Lantai Tidak Dispraying',  document.getElementById('s-resLantai').textContent);
+        addRow('Dinding Memanjang',      document.getElementById('s-resDindingP').textContent);
+        addRow('Dinding Melebar',        document.getElementById('s-resDindingL').textContent);
+        addRow('Atap & Lantai',          document.getElementById('s-resAtap').textContent);
+        addRow('Teras',                  document.getElementById('s-resTeras').textContent);
+        addRow('Permukaan Stapel',       document.getElementById('s-resStapel').textContent);
+        addRow('Lantai Tidak Dispraying',document.getElementById('s-resLantai').textContent);
         addSection('Hasil');
-        addRow('Total Sasaran',            document.getElementById('s-resTotal').textContent, true);
+        addRow('Total Sasaran',          document.getElementById('s-resTotal').textContent, true);
         addRow('Total Pestisida Dibutuhkan', document.getElementById('s-resPestisida').textContent, true);
         addSection('Kebutuhan Larutan');
-        addRow('Kebutuhan Insektisida',    document.getElementById('s-resInsektisida').textContent);
-        addRow('Air Pelarut',              document.getElementById('s-resAir').textContent);
-        addRow('Total Larutan',            document.getElementById('s-resLarutan').textContent);
+        addRow('Kebutuhan Insektisida',  document.getElementById('s-resInsektisida').textContent);
+        addRow('Air Pelarut',            document.getElementById('s-resAir').textContent);
+        addRow('Total Larutan',          document.getElementById('s-resLarutan').textContent);
         doc.save('hasil-spraying.pdf');
 
     } else if (tab === 'fogging') {
@@ -117,12 +129,15 @@ function downloadPDF(tab) {
             return;
         }
         addHeader('Hasil Perhitungan Fogging');
+        addSection('Informasi');
+        addRow('Komoditi',             getSelected('fg-commodity'));
+        addRow('Jenis Insektisida',    getSelected('fg-insektisida'));
         addSection('Rincian Area');
-        addRow('Lantai Gudang',   document.getElementById('fg-resLantai').textContent);
-        addRow('Teras Gudang',    document.getElementById('fg-resTeras').textContent);
+        addRow('Lantai Gudang',        document.getElementById('fg-resLantai').textContent);
+        addRow('Teras Gudang',         document.getElementById('fg-resTeras').textContent);
         addSection('Hasil');
-        addRow('Total Luas Sasaran',          document.getElementById('fg-resTotal').textContent, true);
-        addRow('Total Insektisida Dibutuhkan', document.getElementById('fg-resPestisida').textContent, true);
+        addRow('Total Luas Sasaran',            document.getElementById('fg-resTotal').textContent, true);
+        addRow('Total Insektisida Dibutuhkan',  document.getElementById('fg-resPestisida').textContent, true);
         addSection('Kebutuhan Larutan');
         addRow('Kebutuhan Insektisida', document.getElementById('fg-resInsektisida').textContent);
         addRow('Air Pelarut',           document.getElementById('fg-resAir').textContent);

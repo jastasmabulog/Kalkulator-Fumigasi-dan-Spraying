@@ -112,7 +112,7 @@ function downloadPDF(tab) {
         addRow('Atap & Lantai',          document.getElementById('s-resAtap').textContent);
         addRow('Teras',                  document.getElementById('s-resTeras').textContent);
         addRow('Permukaan Stapel',       document.getElementById('s-resStapel').textContent);
-        addRow('Lantai Tidak Dispraying',document.getElementById('s-resLantai').textContent);
+        addRow('Lantai Tidak Dispraying', document.getElementById('s-resLantai').textContent.replace('−', '-'));
         addSection('Hasil');
         addRow('Total Sasaran',          document.getElementById('s-resTotal').textContent, true);
         addRow('Total Pestisida Dibutuhkan', document.getElementById('s-resPestisida').textContent, true);

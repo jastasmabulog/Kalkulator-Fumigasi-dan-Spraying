@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
     <link rel="icon" type="image/png" href="logo.png">
     <title>Perhitungan Fumigasi, Spraying dan Fogging</title>
 </head>
@@ -126,6 +128,7 @@
                         </div>
                     </div>
                 </section>
+                <button class="btn-download" id="btn-dl-fumigasi" style="display:none;" onclick="downloadPDF('fumigasi')">⬇ Download PDF Fumigasi</button>
 
             </div>
 
@@ -155,10 +158,10 @@
                 </section>
 
                 <section class="card">
-                    <div class="card-label">02 — Volume Broken Space</div>
+                    <div class="card-label">02 — Volume Total</div>
                     <div class="form-grid">
                         <div class="field">
-                            <label for="sf-broken-m3">Volume Broken Space (m³)</label>
+                            <label for="sf-broken-m3">Volume Total di Dalam Sungkup (m³)</label>
                             <input type="number" id="sf-broken-m3" min="0" step="0.01" placeholder="0.00">
                         </div>
                         <div class="field">
@@ -167,8 +170,7 @@
                         </div>
                     </div>
                     <p style="font-size:12px; color:#64748b; margin-top:10px; padding:10px 12px; background:#f0f4f8; border-radius:8px; border-left:3px solid #1a6ef5;">
-                        Volume total broken space tertutup di dalam sungkup
-                    </p>
+                        Volume total di dalam sungkup
                 </section>
 
                 <section class="card">
@@ -196,15 +198,15 @@
                     <div class="result-info" id="sf-resultInfo"></div>
                     <div class="result-grid">
                         <div class="result-item highlight">
-                            <div class="result-label">Tumpukan (ton) ÷ Stowage Factor</div>
+                            <div class="result-label">Kuantum Tonase (informasi)</div>
                             <div class="result-value" id="sf-resTumpukanM3">—</div>
                         </div>
                         <div class="result-item highlight">
-                            <div class="result-label">Volume Broken Space</div>
+                            <div class="result-label">Volume Total Sungkup (m³)</div>
                             <div class="result-value" id="sf-resBroken">—</div>
                         </div>
                         <div class="result-item highlight">
-                            <div class="result-label">Total Volume</div>
+                            <div class="result-label">Volume Total Sungkup</div>
                             <div class="result-value" id="sf-resTotalM3">—</div>
                         </div>
                         <div class="result-item">
@@ -212,11 +214,12 @@
                             <div class="result-value" id="sf-resDosis">—</div>
                         </div>
                         <div class="result-item highlight">
-                            <div class="result-label">Total Obat Dibutuhkan (Total Volume × Dosis)</div>
+                            <div class="result-label">Total Obat Dibutuhkan (Volume × Dosis)</div>
                             <div class="result-value" id="sf-resTotal">— g</div>
                         </div>
                     </div>
                 </section>
+                <button class="btn-download" id="btn-dl-fumigasi-sf" style="display:none;" onclick="downloadPDF('fumigasi-sf')">⬇ Download PDF Fumigasi SF</button>
 
             </div>
 
@@ -435,7 +438,7 @@
                         </div>
                     </div>
                 </section>
-
+                <button class="btn-download" id="btn-dl-spraying" style="display:none;" onclick="downloadPDF('spraying')">⬇ Download PDF Spraying</button>
             </div>
 
             <!-- ======================== -->
@@ -584,6 +587,7 @@
                         </div>
                     </div>
                 </section>
+                <button class="btn-download" id="btn-dl-fogging" style="display:none;" onclick="downloadPDF('fogging')">⬇ Download PDF Fogging</button>
 
             </div>
 

@@ -27,7 +27,7 @@ const fmt = (val, desimal = 2) =>
     val.toLocaleString('id-ID', { minimumFractionDigits: desimal, maximumFractionDigits: desimal });
 
 const fmtMl = (val) =>
-    fmt(val) + ' ml (' + fmt(val / 1000) + ' liter)';
+    fmt(val, 1) + ' ml (' + fmt(val / 1000, 1) + ' liter)';
 
 const fmtFog = (val) =>
     fmt(val) + ' ml (' + fmt(val / 1000) + ' liter)';
@@ -105,6 +105,7 @@ function hitungFumigasi() {
     const brokenTon   = stowage > 0 ? brokenM3 * stowage : 0;
     const totalTon    = qty + brokenTon;
     const totalTablet = totalTon * dosis;
+    const bulatTablet = Math.ceil(totalTablet);
 
     document.getElementById('f-resultInfo').innerHTML =
         `<span class="info-tag">${komoditiNama}</span>
@@ -118,9 +119,10 @@ function hitungFumigasi() {
     document.getElementById('f-resVolTotal').textContent  = fmt(totalTon) + ' ton';
     document.getElementById('f-resDosis').textContent     = dosis + ' tablet/ton';
     document.getElementById('f-resFumigan').textContent   = fmt(totalTablet) + ' tablet';
-    document.getElementById('f-resFumiganKg').textContent = fmt(totalTablet) + ' tablet';
+    document.getElementById('f-resFumiganKg').textContent = bulatTablet.toLocaleString('id-ID') + ' tablet';
 
     tampilkanHasil('hasil-fumigasi');
+    document.getElementById('btn-dl-fumigasi').style.display = 'flex';
 }
 
 // ==============================
@@ -214,6 +216,7 @@ function hitungSpraying() {
     document.getElementById('s-resLarutan').textContent     = fmtMl(30 * luasFinal);
 
     tampilkanHasil('hasil-spraying');
+    document.getElementById('btn-dl-spraying').style.display = 'flex';
 }
 
 // ==============================
@@ -260,6 +263,7 @@ function hitungFogging() {
     document.getElementById('fg-resLarutan').textContent     = fmtFog(total * 1);
 
     tampilkanHasil('hasil-fogging');
+    document.getElementById('btn-dl-fogging').style.display = 'flex';
 }
 
 // ==============================
@@ -296,7 +300,6 @@ function onObatSFChange() {
 
 function hitungFumigaziSF() {
     const qty      = parseFloat(document.getElementById('sf-qty').value) || 0;
-    const stowage  = parseFloat(document.getElementById('sf-stowage').value) || 0;
     const brokenM3 = parseFloat(document.getElementById('sf-broken-m3').value) || 0;
     const dosis    = parseFloat(document.getElementById('sf-dosis').value) || 0;
     const komoEl   = document.getElementById('sf-commodity');
@@ -304,10 +307,10 @@ function hitungFumigaziSF() {
     const obatEl   = document.getElementById('sf-obat');
     const obat     = obatEl.options[obatEl.selectedIndex].text;
 
-    const tumpukanM3  = stowage > 0 ? qty / stowage : 0;
-    const totalM3     = tumpukanM3 + brokenM3;
-    const totalObatG  = totalM3 * dosis;
+    const totalObatG  = brokenM3 * dosis;
     const totalObatKg = totalObatG / 1000;
+    const bulatG      = Math.ceil(totalObatG  * 10) / 10;
+    const bulatKg     = Math.ceil(totalObatKg * 10) / 10;
 
     document.getElementById('sf-resultInfo').innerHTML =
         `<span class="info-tag">${komoditi}</span>
@@ -316,16 +319,15 @@ function hitungFumigaziSF() {
          <span class="info-sep">·</span>
          <span class="info-tag">${obat}</span>`;
 
-    document.getElementById('sf-resTumpukanM3').textContent =
-        fmt(qty) + ' ÷ ' + fmt(stowage) + ' = ' + fmt(tumpukanM3) + ' m³';
-    document.getElementById('sf-resBroken').textContent  = fmt(brokenM3) + ' m³';
-    document.getElementById('sf-resTotalM3').textContent =
-        fmt(tumpukanM3) + ' + ' + fmt(brokenM3) + ' = ' + fmt(totalM3) + ' m³';
-    document.getElementById('sf-resDosis').textContent   = dosis + ' g/m³';
-    document.getElementById('sf-resTotal').textContent   =
-        fmt(totalObatG) + ' g (' + fmt(totalObatKg) + ' kg)';
+    document.getElementById('sf-resTumpukanM3').textContent = fmt(qty) + ' ton';
+    document.getElementById('sf-resBroken').textContent     = fmt(brokenM3) + ' m³';
+    document.getElementById('sf-resTotalM3').textContent    = fmt(brokenM3) + ' m³ (volume sungkup)';
+    document.getElementById('sf-resDosis').textContent      = dosis + ' g/m³';
+    document.getElementById('sf-resTotal').textContent      =
+        fmt(bulatG, 1) + ' g (' + fmt(bulatKg, 1) + ' kg)';
 
     tampilkanHasil('hasil-fumigasi-sf');
+    document.getElementById('btn-dl-fumigasi-sf').style.display = 'flex';
 }
 
 // ==============================
@@ -348,6 +350,7 @@ function resetForm(tab) {
         onKomoditasChange();
         onFumiganChange();
         document.getElementById('hasil-fumigasi').classList.remove('visible');
+        document.getElementById('btn-dl-fumigasi').style.display = 'none';
     }
     if (tab === 'spraying') {
         ['s-panjang','s-lebar','s-tinggi','s-teras','s-sisi-panjang',
@@ -362,6 +365,7 @@ function resetForm(tab) {
          'r-dinding-lebar-rumus','r-atap-rumus','r-teras-rumus',
          'r-stapel-rumus','r-lantai-rumus'].forEach(id => document.getElementById(id).textContent = '—');
         document.getElementById('hasil-spraying').classList.remove('visible');
+        document.getElementById('btn-dl-spraying').style.display = 'none';
     }
     if (tab === 'fogging') {
         ['fg-panjang','fg-lebar','fg-tinggi','fg-teras',
@@ -371,6 +375,7 @@ function resetForm(tab) {
         ['fg-r-lantai','fg-r-teras','fg-r-total',
          'fg-r-lantai-rumus','fg-r-teras-rumus'].forEach(id => document.getElementById(id).textContent = '—');
         document.getElementById('hasil-fogging').classList.remove('visible');
+        document.getElementById('btn-dl-fogging').style.display = 'none';
     }
     if (tab === 'fumigasi-sf') {
         document.getElementById('sf-qty').value       = '';
@@ -380,6 +385,7 @@ function resetForm(tab) {
         onKomoditasSFChange();
         onObatSFChange();
         document.getElementById('hasil-fumigasi-sf').classList.remove('visible');
+        document.getElementById('btn-dl-fumigasi-sf').style.display = 'none';
     }
 }
 
